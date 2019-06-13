@@ -48,13 +48,23 @@ sig Archive{
 fact{}
 fact {
 	-- Toda Pasta deve pertencer a um usuario
-	all f : Folder | one f.~folders
+   all f : Folder | one f.~folders
 }
 
-	-- Todo arquivo deve pertecer a uma pasta
-fact {
+fact {	
+	-- Todo arquivo deve pertencer a uma pasta
 	all a : Archive | one a.~archives
+	
 }
+
+fact Date {
+	all d:Date | one d.~date  -- Toda data deve pertencer a um Arquivo
+	all d:Day | one d.~day  -- Todo dia deve pertencer a uma Data
+	all h:Hour | one h.~hours  -- Toda hora deve pertencer a um Dia 
+	all m:Minute | one m.~minutes -- Todo minuto deve pertencer a uma Hora
+}
+
+
 pred show[] {
 }
 run show for 3
