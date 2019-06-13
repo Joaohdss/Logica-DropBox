@@ -45,6 +45,16 @@ sig Archive{
 	createUser: one User,
 	versions : set Version
 }
+fact{}
+fact {
+	-- Toda Pasta deve pertencer a um usuario
+	all f : Folder | one f.~folders
+}
+
+	-- Todo arquivo deve pertecer a uma pasta
+fact {
+	all a : Archive | one a.~archives
+}
 pred show[] {
 }
 run show for 3
