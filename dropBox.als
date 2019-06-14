@@ -1,5 +1,5 @@
 module dropBox
-
+open Data as Data
 ------------------------------------------------------------------------
 -- PROJETO ALLOY:  DROPBOX
 
@@ -16,47 +16,40 @@ module dropBox
 
 -------------------------------------------------------------------------
 sig User {
-	folders: set Folder
+	storage : set (Folder + Archive)
 }
+
 sig Folder{
 	archives: set Archive
 }
 
-sig Date {
-	day: one Day
-}
-sig Day {
-	hours : one Hour
-}
-
-sig Hour {
-	minutes : one Minute
-}
-sig Minute {
-
-}
 abstract sig Version{}
 sig VersionCurrent extends Version{}
 sig VersionPrevious extends Version{}
 
 sig Archive{
+	info : one Info,
 	date: one Date,
-	newDate: one Date,
-	createUser: one User,
-	versions : set Version
-}
-fact{}
-fact {
-	-- Toda Pasta deve pertencer a um usuario
-   all f : Folder | one f.~folders
+	backup: Backup -> Date
 }
 
-fact {	
+sig Backup{
+}
+sig Info{}
+fact Folder{
+	-- Toda Pasta deve pertencer a um usuario
+   all f : Folder | one f.~storage
+}
+
+fact Archive{	
 	-- Todo arquivo deve pertencer a uma pasta
 	all a : Archive | one a.~archives
-	
+	-- Info deve pertencer apenas a um arquivo
+	all i : Info | one i.~info	
 }
-
+fact {
+	all d: Date | one d.~date
+}
 fact Date {
 	all d:Date | one d.~date  -- Toda data deve pertencer a um Arquivo
 	all d:Day | one d.~day  -- Todo dia deve pertencer a uma Data
@@ -67,4 +60,4 @@ fact Date {
 
 pred show[] {
 }
-run show for 3
+run show for 5
