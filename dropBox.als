@@ -15,6 +15,9 @@ open Data as Data
 -- PROFESSOR : TIAGO MASSONI
 
 -------------------------------------------------------------------------
+sig DropBox {
+	users : set User
+}
 sig User {
 	storage : set (Folder + Archive)
 }
