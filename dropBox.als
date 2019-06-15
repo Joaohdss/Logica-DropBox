@@ -21,21 +21,27 @@ sig DropBox {
 }
 
 sig User {
-	storage : set (Folder),
+	storage : set Folder,
 	permission: one Permission
 }
 
 sig Folder{
 	archives: set Archive,
+	owner: one User,
+	participantes: set User
 
 }
 
-sig Archive{
+abstract sig Archive{
 	info : one Info,
 	date: one Date,
 	backup: Backup -> Date
 
 }
+sig Music extends Archive{}
+sig Movie extends Archive{}
+sig Text extends Archive{}
+sig Image extends Archive{}
 
 sig Backup{
 }
@@ -50,9 +56,14 @@ sig Read extends Permission{}
 sig Write extends Permission{}
 sig Admin extends Permission{}
 
+pred cardinalidade {
+	#DropBox = 1
+}
+
 fact Folder{
 	-- Toda Pasta deve pertencer a um usuario
    all f : Folder | one f.~storage
+
 }
 fact Archive{	
 	-- Todo arquivo deve pertencer a uma pasta
@@ -62,6 +73,9 @@ fact Archive{
 }
 fact {
 	all d: Date | one d.~date
+	all f:Folder | one u:User | u in f.owner
+	all f:Folder | some u:User | u in f.participantes
+	all u:User | some f:Folder | u in f.participantes
 }
 fact {
 	all u: User | one u.~users
@@ -79,4 +93,4 @@ fact Date {
 
 pred show[] {
 }
-run show for 5
+run show for 3
