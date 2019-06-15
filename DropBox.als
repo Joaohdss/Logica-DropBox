@@ -96,10 +96,6 @@ fact add_remove_update_archive {
 
 }
 ---- PREDICADOS
-pred init [t: Date] {
-	one (User.storage.archives).t
-	one (User.device).t
-}
 pred addArchive[d:Object,p:Folder,t,t':Date] {
  	d !in p.(archives.t)
 	(p.archives).t' = (p.archives).t + d
