@@ -21,10 +21,10 @@ open util/ordering[Date] as to
 
 one sig User {
 	storage : set Folder,
-	device: set Device -> Date -- O usuario ta conectado no momento em um aparelho
+	device: set Device -> Date 
 }
 
-sig Folder{
+sig Folder {
 	archives: set Object -> Date
 }
 
@@ -59,16 +59,25 @@ one sig Write_Read extends Permission{}
 sig Backup{
 }
 --------- FATOS
+fact {
+
+
+	
+}
 fact Folder{
 	-- Toda Pasta deve pertencer a um usuario
    all f : Folder | one f.~storage
 }
 
 fact Archive{	
+	-- Todo Arquivo deve pertencer a uma pasta
+	all d:Archive , t:Date | one d.~(archives.t)
 	-- Info deve pertencer apenas a um arquivo
 	all i : Info | one i.~info	
 	-- Todo arquivo deve ter algum tipo de permissao
 	all a:Archive,t:Date  | one a.(permission.t)
+
+	all a:Archive, t:Date | some p:Folder | a in p.(archives.t)
 	
 }
 fact Device{
@@ -78,16 +87,19 @@ fact Device{
 	all d:Device | (d in Pc || d in Tablet) => (d.permission = Write_Read)
 }
 fact add_remove_update_archive {
-
+	
 	all date: Date-last | 
-    let pos = date.next |
-    some d:Object, p:Folder | 
-    addArchive[d,p,date,pos] ||
+   let pos = date.next |
+   some d:Object, p:Folder | 
+   addArchive[d,p,date,pos] ||
 	removeArchive[d,p,date,pos] 
 
 }
 ---- PREDICADOS
-
+pred init [t: Date] {
+	one (User.storage.archives).t
+	one (User.device).t
+}
 pred addArchive[d:Object,p:Folder,t,t':Date] {
  	d !in p.(archives.t)
 	(p.archives).t' = (p.archives).t + d
@@ -103,4 +115,4 @@ pred updateArchive[a:Archive,b:Backup,d,d':Date] {
 
 pred show[] {}
 
-run show for 4
+run show for 5
