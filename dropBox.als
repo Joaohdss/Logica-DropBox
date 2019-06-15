@@ -17,7 +17,7 @@ open Data as Data
 
 -------------------------------------------------------------------------
 sig DropBox {
-	users : set User
+	users : some User
 }
 
 sig User {
@@ -53,13 +53,14 @@ abstract sig Permission{
 	archive : one Archive
 }
 sig Read extends Permission{}
-sig Write extends Permission{}
-sig Admin extends Permission{}
+sig Write_Read extends Permission{}
 
+---- PREDICADOS
 pred cardinalidade {
 	#DropBox = 1
 }
 
+--------- FATOS
 fact Folder{
 	-- Toda Pasta deve pertencer a um usuario
    all f : Folder | one f.~storage
@@ -82,7 +83,7 @@ fact {
 }
 fact {
 	all p:Permission | one p.~permission
-	all a : Archive | some a.~archive
+	all f : Archive | some f.~archive
 }
 fact Date {
 	all d:Date | one d.~date  -- Toda data deve pertencer a um Arquivo
@@ -90,6 +91,32 @@ fact Date {
 	all h:Hour | one h.~hours  -- Toda hora deve pertencer a um Dia 
 	all m:Minute | one m.~minutes -- Todo minuto deve pertencer a uma Hora
 }
+ ------- ASSERTS 
+-- DropBox Tem Pelo Menos um Usuario
+
+assert dropBoxUsers{
+	all c:DropBox | some c.users
+}
+-- Todo Arquivo Tem somente uma Info
+assert archiveInfo{
+	all c:Archive | one c.info
+}
+-- Toda Pasta tem um Dono
+assert folderOwner{
+	all f:Folder | one f.owner
+}
+
+-- Todo Usuario tem algum arquivo
+assert userArchive{
+	some User.storage.archives
+}
+
+-------- CHECKS
+
+--check dropBoxUsers for 6
+--check archiveInfo for 6
+--check folderOwner for 6
+--check userArchive for 6
 
 pred show[] {
 }
