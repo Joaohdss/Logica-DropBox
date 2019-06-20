@@ -18,29 +18,31 @@ open util/ordering[Date] as to
 -- PROFESSOR : TIAGO MASSONI
 
 -------------------------------------------------------------------------
-
+-- Usuario 
 one sig User {
 	storage : set Folder,
 	device: set Device -> Date 
 }
-
+-- Pasta
 sig Folder {
 	archives: set Object -> Date
 }
 
+-- Arquivos
 abstract sig Archive extends Object {
 	info : one Info,
    backup : set Backup ->Date,
 	permission: set Permission ->Date
 }
-
+-- Tipos de arquivos
+sig Text extends Archive{}
 sig Music extends Archive{}
 sig Movie extends Archive{}
-sig Text extends Archive{}
 sig Image extends Archive{}
 sig Rar extends Archive{}
-
+-- Informacao do arquivo
 sig Info {}
+-- Dispositivos a ser conectado pelo usuario 
 abstract sig Device {
 	permission : one Permission
 }
@@ -55,15 +57,10 @@ sig Tablet extends Device{}
 abstract sig Permission{}
 one sig Read extends Permission{}
 one sig Write_Read extends Permission{}
-
+-- Versões dos arquivos
 sig Backup{
 }
 --------- FATOS
-fact {
-
-
-	
-}
 fact Folder{
 	-- Toda Pasta deve pertencer a um usuario
    all f : Folder | one f.~storage
@@ -80,12 +77,16 @@ fact Archive{
 	all a:Archive, t:Date | some p:Folder | a in p.(archives.t)
 	
 }
+
 fact Device{
 	-- Todo aparelho que for celular ou kindle sua permissao é Leitura
 	all d:Device | (d in Cell || d in Kindle) => (d.permission = Read)
 	-- Todo aparelho que for Pc ou Tablet é Leitura e Escrita 
 	all d:Device | (d in Pc || d in Tablet) => (d.permission = Write_Read)
 }
+-- Adiciona Arquivo
+-- Remove Arquivo
+-- Atualiza Arquivo
 fact add_remove_update_archive {
 	
 	all date: Date-last | 
@@ -95,6 +96,18 @@ fact add_remove_update_archive {
 	removeArchive[d,p,date,pos] 
 
 }
+-- Adiciona Dispositivos moveis 
+--Remove Dispositivos moveus
+
+fact add_remove_update_device {
+	all date: Date-last | 
+   let pos = date.next |
+   some d: Device| 
+   addDevice[d,date,pos] ||
+	removeDevice[d,date,pos]
+
+}
+
 ---- PREDICADOS
 pred addArchive[d:Object,p:Folder,t,t':Date] {
  	d !in p.(archives.t)
@@ -107,6 +120,14 @@ pred removeArchive[d:Object,p:Folder,t,t':Date] {
 pred updateArchive[a:Archive,b:Backup,d,d':Date] {
 	b !in ((a.backup).d)
 	(a.backup).d' = b
+}
+pred addDevice[d:Device, t,t':Date]{
+	d !in User.(device.t)
+	(User.device).t'= (User.device).t + d
+}
+pred removeDevice[d:Device, t,t':Date]{
+	d !in User.(device.t)
+	(User.device).t'= (User.device).t - d
 }
 
 pred show[] {}
