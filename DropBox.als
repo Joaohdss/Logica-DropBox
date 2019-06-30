@@ -75,8 +75,10 @@ fact Archive{
 	all a:Archive,t:Date  | one a.(permission.t)
 
 	all a:Archive, t:Date | some p:Folder | a in p.(archives.t)
-	
+	-- todo Backup esta contido em Arquivo
+	all b:Backup, d:Date |some a:Archive | b in (a.(backup.d))
 }
+fact Versao{}
 
 fact Device{
 	-- Todo aparelho que for celular ou kindle sua permissao é Leitura
@@ -93,9 +95,12 @@ fact add_remove_update_archive {
    let pos = date.next |
    some d:Object, p:Folder | 
    addArchive[d,p,date,pos] ||
-	removeArchive[d,p,date,pos] 
+	removeArchive[d,p,date,pos]
+	-- Modifica backup do arquivo
+	 all date: Date-last | let pos = date.next |some a:Archive, b:Backup| updateArchive[a,b,date,pos]
 
 }
+
 -- Adiciona Dispositivos moveis 
 --Remove Dispositivos moveus
 
@@ -105,7 +110,6 @@ fact add_remove_update_device {
    some d: Device| 
    addDevice[d,date,pos] ||
 	removeDevice[d,date,pos]
-
 }
 
 ---- PREDICADOS
@@ -117,6 +121,7 @@ pred removeArchive[d:Object,p:Folder,t,t':Date] {
  	d !in p.(archives.t)
 	(p.archives).t' = (p.archives).t- d
 }
+
 pred updateArchive[a:Archive,b:Backup,d,d':Date] {
 	b !in ((a.backup).d)
 	(a.backup).d' = b
@@ -129,6 +134,44 @@ pred removeDevice[d:Device, t,t':Date]{
 	d !in User.(device.t)
 	(User.device).t'= (User.device).t - d
 }
+------- ASSERTS 
+
+assert todaContaTemPeloMenosPasta{
+	   all c:User| some c.storage
+}
+assert todaPastaDevePertencerUmUsuario{
+		all f : Folder | one f.~storage
+}
+assert todaPastaDeveTerPeloMenosUmArquivo{
+	all f: Folder | some f.archives
+}
+assert todoDispositivoTemUmaPermissao {
+	all d:Device | one d.permission
+}
+assert todoArquivoTemPeloMenosUmBackup {
+	all a:Archive | some a.backup
+
+}
+assert todoUsuarioTemAlgumArquivo{
+	some User.storage.archives
+}
+assert todoUsuarioTemAlgumDispositivo{
+	some User.device
+}
+assert todoArquivoTemUmaInfo{
+	all a:Archive | one a.info
+}
+
+-------- CHECKS
+
+check todaContaTemPeloMenosPasta for 10
+check todaPastaDevePertencerUmUsuario for 10
+check todaPastaDeveTerPeloMenosUmArquivo for 10
+check todoDispositivoTemUmaPermissao for 10
+check todoArquivoTemPeloMenosUmBackup for 10
+check todoUsuarioTemAlgumArquivo for 10
+check todoUsuarioTemAlgumDispositivo for 10
+check todoArquivoTemUmaInfo for 10
 
 pred show[] {}
 
