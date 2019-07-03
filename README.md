@@ -22,10 +22,3 @@ A especificação em NuSMV deverá incluir a descrição comportamental do siste
 
 Cada um dos temas possui um cliente, que é o contato chave pra tirar dúvidas sobre o projeto. Vocês podem usar o slack para isso, mas tentem pelo menos um encontro presencial com o cliente.
 ```
-
-#### Fatos Escolhidos (Propriedades mais importantes do sistema)
-
-- Um arquivo tem várias versões asociadas a ele, que podem ser recuperadas e se tornar a versão atual. 
-- O modelo simula um sistema de arquivos arquivos com pastas e arquivos de diversos tipos. 
-- Arquivos podem ser adicionados, modificados e removidos ( modificados por um unico usuário ao mesmo tempo ) 
-
