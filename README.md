@@ -2,14 +2,27 @@
 
 ## Tema : Dropbox
 
+Projeto da Disciplina de Lógica- 2019.1
 
-No Dropbox podemos nos cadastrar e armazenar, em pastas, todo tipo de arquivo como música, filmes, etc. 
-O Dropbox guarda arquivos, com data e hora do upload, última modificação, e usuário criador. 
-Cada arquivo tem várias versões associadas a ele, que podem ser recuperadas e tornar-se novamente a versão atual. 
-A vários dispositivos do usuário podem ser dadas autorizações para visualizar e modificar os arquivos da conta dele do dropbox. 
-Arquivos podem ser adicionados, modificados ou removidos. Uma limitação é que um arquivo só pode ser modificado por um único usuário em cada momento. 
-Mesmo que dois usuários tenham permissão de modificação. 
-Além disso, um arquivo não pode ser modificado por um usuário e lido por outro ao mesmo tempo.
+**Grupo:** Caio Simplício, Fabiana Alves, João Henrique e Luan Carlos. 
+
+Especificação em Alloy e NuSMV
+
+ ## Especificação :pushpin:
+
+:arrow_right: No Dropbox podemos nos cadastrar e armazenar, em pastas, todo tipo de arquivo como música, filmes, etc. 
+
+:arrow_right: O Dropbox guarda arquivos, com data e hora do upload, última modificação, e usuário criador. 
+
+:arrow_right: Cada arquivo tem várias versões associadas a ele, que podem ser recuperadas e tornar-se novamente a versão atual. 
+
+:arrow_right: A vários dispositivos do usuário podem ser dadas autorizações para visualizar e modificar os arquivos da conta dele do dropbox. 
+
+:arrow_right: Arquivos podem ser adicionados, modificados ou removidos. Uma limitação é que um arquivo só pode ser modificado por um único usuário em cada momento. 
+
+:arrow_right: Mesmo que dois usuários tenham permissão de modificação. 
+
+:arrow_right: Além disso, um arquivo não pode ser modificado por um usuário e lido por outro ao mesmo tempo.
 
 #### Cliente: Tiago Massoni
  
